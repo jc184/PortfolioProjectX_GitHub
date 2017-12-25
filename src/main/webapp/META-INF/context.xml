@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiJARLocking="true" path="/PortfolioProjectX">
+  <Resource auth="Container" driverClassName="com.mysql.jdbc.Driver" maxActive="20" maxIdle="10" maxWait="-1" name="moravian" password="stcallans" type="javax.sql.DataSource" url="jdbc:mysql://localhost:3306/moravian?zeroDateTimeBehavior=convertToNull" username="root"/>
+</Context>
