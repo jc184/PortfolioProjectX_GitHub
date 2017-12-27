@@ -87,7 +87,6 @@ public class OrderManager {
 
         em.flush();
         //em = getEm();
-
         //EntityTransaction etx = em.getTransaction();
         List<CartItem> items = cart.getItems();
 
@@ -100,8 +99,10 @@ public class OrderManager {
             // set up primary key object
             OrderedProductPK orderedProductPK = new OrderedProductPK();
             orderedProductPK.setCustomerOrderId(customerOrder.getId());
-            orderedProductPK.setCustomerOrderId(productCode);
+            //ADDED BY JC
+            orderedProductPK.setProductCode(productCode);
 
+            //orderedProductPK.setCustomerOrderId(productCode);
             // create ordered item using PK object
             OrderedProduct orderedItem = new OrderedProduct(orderedProductPK);
 

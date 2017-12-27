@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 25, 2017 at 11:49 AM
+-- Generation Time: Dec 27, 2017 at 11:31 AM
 -- Server version: 10.0.17-MariaDB
 -- PHP Version: 5.6.14
 
@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `moravian`
 --
-CREATE DATABASE IF NOT EXISTS `moravian` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `moravian`;
 
 -- --------------------------------------------------------
 
@@ -28,9 +26,8 @@ USE `moravian`;
 -- Table structure for table `category`
 --
 
-DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category` (
-  `id` int(11) NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
   `category_name` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -52,9 +49,8 @@ INSERT INTO `category` (`id`, `category_name`) VALUES
 -- Table structure for table `customer`
 --
 
-DROP TABLE IF EXISTS `customer`;
 CREATE TABLE `customer` (
-  `id` int(11) NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
   `firstname` varchar(225) NOT NULL,
   `lastname` varchar(255) NOT NULL,
   `addressline1` varchar(225) NOT NULL,
@@ -83,13 +79,12 @@ INSERT INTO `customer` (`id`, `firstname`, `lastname`, `addressline1`, `addressl
 -- Table structure for table `customer_order`
 --
 
-DROP TABLE IF EXISTS `customer_order`;
 CREATE TABLE `customer_order` (
-  `id` int(11) UNSIGNED NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
   `amount` decimal(6,2) NOT NULL,
   `orderdate` datetime NOT NULL,
-  `confirmation_number` int(11) NOT NULL,
-  `customer_customerid` int(11) NOT NULL
+  `confirmation_number` int(10) UNSIGNED NOT NULL,
+  `customer_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -98,11 +93,10 @@ CREATE TABLE `customer_order` (
 -- Table structure for table `ordered_product`
 --
 
-DROP TABLE IF EXISTS `ordered_product`;
 CREATE TABLE `ordered_product` (
-  `customer_order_id` int(11) UNSIGNED NOT NULL,
-  `product_code` int(11) UNSIGNED NOT NULL,
-  `quantity` smallint(4) UNSIGNED NOT NULL
+  `customer_order_id` int(10) UNSIGNED NOT NULL,
+  `product_code` int(10) UNSIGNED NOT NULL,
+  `quantity` smallint(5) UNSIGNED NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 KEY_BLOCK_SIZE=1;
 
 -- --------------------------------------------------------
@@ -111,13 +105,12 @@ CREATE TABLE `ordered_product` (
 -- Table structure for table `product`
 --
 
-DROP TABLE IF EXISTS `product`;
 CREATE TABLE `product` (
-  `code` int(11) UNSIGNED NOT NULL,
+  `code` int(10) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
   `price` double NOT NULL,
   `description` varchar(255) DEFAULT NULL,
-  `category_id` int(11) NOT NULL
+  `category_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -155,7 +148,7 @@ ALTER TABLE `customer`
 --
 ALTER TABLE `customer_order`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_order_customer1_idx` (`customer_customerid`);
+  ADD KEY `fk_order_customer1_idx` (`customer_id`);
 
 --
 -- Indexes for table `ordered_product`
@@ -177,25 +170,15 @@ ALTER TABLE `product`
 --
 
 --
--- AUTO_INCREMENT for table `category`
---
-ALTER TABLE `category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
---
--- AUTO_INCREMENT for table `customer`
---
-ALTER TABLE `customer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
---
 -- AUTO_INCREMENT for table `customer_order`
 --
 ALTER TABLE `customer_order`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `code` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `code` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- Constraints for dumped tables
 --
@@ -204,20 +187,20 @@ ALTER TABLE `product`
 -- Constraints for table `customer_order`
 --
 ALTER TABLE `customer_order`
-  ADD CONSTRAINT `fk_order_customer1` FOREIGN KEY (`customer_customerid`) REFERENCES `customer` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_customer_order_customer` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `ordered_product`
 --
 ALTER TABLE `ordered_product`
-  ADD CONSTRAINT `fk_ordered_product_customer_order` FOREIGN KEY (`customer_order_id`) REFERENCES `customer_order` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_ordered_product_product` FOREIGN KEY (`product_code`) REFERENCES `product` (`code`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_ordered_product_customer_order` FOREIGN KEY (`customer_order_id`) REFERENCES `customer_order` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_ordered_product_product` FOREIGN KEY (`product_code`) REFERENCES `product` (`code`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `product`
 --
 ALTER TABLE `product`
-  ADD CONSTRAINT `fk_product_category1` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_product_category1` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
