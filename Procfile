@@ -1,1 +1,1 @@
-web: java -jar target/PortfolioProjectX_GitHub-1.0.jar
+web: java -jar target/PortfolioProjectX_GitHub-1.0-SNAPSHOT.war
